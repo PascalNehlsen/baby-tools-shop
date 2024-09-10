@@ -6,15 +6,15 @@ from django.contrib.auth.models import User
 class RegisterForm(UserCreationForm):
     first_name=forms.CharField(widget=forms.TextInput(attrs={
         'class':'form-control',
-        'placeholder':'Adı'
+        'placeholder':'First Name'
     }))
     last_name=forms.CharField(widget=forms.TextInput(attrs={
         'class':'form-control',
-        'placeholder':'SoyAdı'
+        'placeholder':'Last Name'
     }))
     username=forms.CharField(widget=forms.TextInput(attrs={
         'class':'form-control',
-        'placeholder':'Kullanıcı Adı'
+        'placeholder':'Username'
     }))
     email=forms.CharField(widget=forms.EmailInput(attrs={
         'class':'form-control',
@@ -22,11 +22,11 @@ class RegisterForm(UserCreationForm):
     }))
     password1=forms.CharField(widget=forms.PasswordInput(attrs={
         'class':'form-control',
-        'placeholder':'Şifre'
+        'placeholder':'Password'
     }))
     password2=forms.CharField(widget=forms.PasswordInput(attrs={
         'class':'form-control',
-        'placeholder':'Tekrar Şifre'
+        'placeholder':'Confirm Password'
     }))
     class Meta:
         model=User
@@ -38,11 +38,11 @@ class RegisterForm(UserCreationForm):
 class LoginForm(forms.Form):
     username=forms.CharField(widget=forms.TextInput(attrs={
         'class':'form-control',
-        'placeholder':'Kullanıcı Adı'
+        'placeholder':'Email'
     }))
     password=forms.CharField(widget=forms.PasswordInput(attrs={
         'class':'form-control',
-        'placeholder':'Şifre'
+        'placeholder':'Password'
     }))
 
 
