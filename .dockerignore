@@ -1,0 +1,44 @@
+# Ignore Python bytecode
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+
+# Ignore virtual environment directories
+venv/
+.env/
+env/
+.venv/
+.ENV/
+
+# Ignore Django-specific files
+*.sqlite3
+*.log
+
+# Ignore Git files and directories
+.git
+.gitignore
+
+# Ignore other IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# Ignore Docker-specific files
+Dockerfile*
+.dockerignore
+
+# Ignore Node modules (if using frontend with Node.js)
+node_modules/
+
+# Ignore test results and coverage reports
+.coverage
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+*.log
