@@ -232,7 +232,7 @@ This section will cover some hot tips when trying to interacting with this repos
 
 ##### Home Page with login
 
-![Home Page with login](./project_images/all-products.jpg 'Home Page with login')
+![Home Page with login](./project_images/all-products.png 'Home Page with login')
 
 ##### Home Page with filter
 
