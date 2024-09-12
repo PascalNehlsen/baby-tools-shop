@@ -17,6 +17,12 @@ The **Baby Tools Shop** project is a Django-based web application that allows us
 
 ## Quickstart
 
+### Technologies
+
+- Python 3.9
+- Django 4.0.2
+- Venv
+
 To get started with the Baby Tools Shop, follow these steps:
 
 1. **Set up your Python environment:**
@@ -25,19 +31,11 @@ To get started with the Baby Tools Shop, follow these steps:
    python -m venv your_environment_name
    ```
 
-   - Creates a virtual environment: This command sets up an isolated Python environment in a folder named your_environment_name.
-   - Prevents conflicts: It keeps your project dependencies separate from the global Python installation.
-   - Allows easy package management: Each environment can have its own dependencies without affecting other projects.
-
 2. **Activate the virtual environment:**
 
    ```
    your_environment_name\Scripts\activate
    ```
-
-   - Activates the virtual environment: This command enables the virtual environment by switching the current shell to use its Python interpreter.
-   - Prepares environment: It ensures any Python commands (e.g., installing packages) will be executed within the virtual environment, not in the global Python environment.
-   - Windows-specific: This command is used for activating the virtual environment on Windows systems.
 
 3. **Navigate to the project directory:**
 
@@ -45,38 +43,34 @@ To get started with the Baby Tools Shop, follow these steps:
    cd babyshop_app
    ```
 
-   - Change directory: This command navigates into the babyshop_app folder.
-   - Access project files: Moves to the directory where the project code, such as Django settings and app files, is located.
-
 4. **Install Django:**
 
    ```
-   python -m pip install Django
+   python -m pip install Django==4.0.2
    ```
 
-   - Installs Django: This command uses pip (Python's package manager) to download and install the Django framework.
-   - Ensures Django is available: Makes Django available within the virtual environment for your project.
-   - Fetches dependencies: Automatically installs any required dependencies for Django.
-
-5. **Create a requirements.txt file:**
+5. **Go to the root directory and create a requirements.txt file:**
 
    ```
-    pip freeze > requirements.txt
+    cd ..
    ```
 
-   - Generate requirements file: This command captures all the installed Python packages in your environment.
-   - Creates requirements.txt: Saves the current package versions and dependencies into a requirements.txt file.
-   - Facilitates future installations: Allows others (or you) to recreate the same environment by installing the exact dependencies listed.
+   ```
+    nano requirements.txt
+   ```
+
+   - Django==4.0.2
+   - pillow==10.4.0
 
 6. **Apply migrations:**
 
    ```
-    python manage.py migrate
+   python manage.py makemigrations
    ```
 
-   - Applies database migrations: This command updates the database schema based on your Django models.
-   - Executes pending migrations: It applies any changes or new migrations that haven't been run yet.
-   - Ensures database consistency: Syncs the database structure with the defined models in your Django application.
+   ```
+    python manage.py migrate
+   ```
 
 7. **Create a superuser:**
 
@@ -84,9 +78,7 @@ To get started with the Baby Tools Shop, follow these steps:
     python manage.py createsuperuser
    ```
 
-   - Creates a superuser account: This command sets up an administrative user with full access to the Django admin panel.
-   - Prompts for credentials: You will be asked to provide a username, email, and password for the superuser.
-   - Grants admin privileges: The superuser can manage the entire application, including creating, updating, and deleting data.
+   - **Important**: Use a DJANGO_SUPERUSER_USERNAME, DJANGO_SUPERUSER_EMAIL and a DJANGO_SUPERUSER_PASSWORD
 
 8. **Run the development server:**
 
@@ -94,11 +86,8 @@ To get started with the Baby Tools Shop, follow these steps:
     python manage.py runserver
    ```
 
-   - Starts the development server: This command launches Django’s built-in web server for local testing.
    - You can access the admin panel at http://<your_ip>:8000/admin
-   - Enables live development: Allows you to make and test changes in real-time as you develop your application.
-
-- Create products in the admin panel
+   - Create products in the admin panel
 
 ## Configuration
 
@@ -117,7 +106,7 @@ To get started with the Baby Tools Shop, follow these steps:
 
     ```
     # Use an official Python image as the base
-    FROM python:3.12.5
+    FROM python:3.9-slim
 
     # Set the working directory inside the container
 
@@ -125,23 +114,24 @@ To get started with the Baby Tools Shop, follow these steps:
 
     # Copy only the requirements file and install dependencies
 
-    COPY requirements.txt /app/
+    COPY requirements.txt ${WORKDIR}
     RUN python -m pip install --no-cache-dir -r requirements.txt
 
-    # Now copy the rest of the app
+    # Copy the code into the working direction
 
-    COPY . /app
+    COPY . ${WORKDIR}
 
     # Change to the app directory and run database migrations
 
     WORKDIR /app/babyshop_app
+    RUN python manage.py makemigrations
     RUN python manage.py migrate
 
     EXPOSE 8025
 
     # This is the command that will be executed on container launch
 
-    ENTRYPOINT ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8025"]
+    ENTRYPOINT ["sh", "-c", "python manage.py runserver 0.0.0.0:8025"]
     ```
 
 ## Deploying with Docker
@@ -174,13 +164,13 @@ To get started with the Baby Tools Shop, follow these steps:
 4.  **Run the Docker container:**
 
     ```
-    docker run -d --name babyshop_app_container \
-    -p 8025:8025 \
-    -v babyshop_db:/app/babyshop_app/db \
-    -v babyshop_media:/app/babyshop_app/media \
-    -v babyshop_static:/app/babyshop_app/static \
-    --restart on-failure \
-    app_name
+    docker run -d --name app_name_container \
+      -p 8025:8025 \
+      -v babyshop_db:/app/babyshop_app/db \
+      -v babyshop_media:/app/babyshop_app/media \
+      -v babyshop_static:/app/babyshop_app/static \
+      --restart on-failure \
+      app_name
     ```
 
     - Run a Docker container: This command starts a new container from the Docker image named app_name.
@@ -196,7 +186,40 @@ To get started with the Baby Tools Shop, follow these steps:
     - Restart policy (--restart on-failure): Automatically restarts the container if it fails, but not if stopped manually.
 
     - You can access your app at http://<vm_ip>:8025/
+
+5.  **Create a superuser**
+
+    ```
+    docker ps
+    ```
+
+    - Shows active containers: Lists all running containers with their IDs and names.
+    - Identify your container: Find the container ID or name for your Django app.
+
+    ```
+    docker exec -it <container_name_or_id> /bin/bash
+    ```
+
+    - Execute a command inside a container: Opens an interactive terminal (-it) within the specified container.
+    - Replace <container_name_or_id>: Use the actual container name or ID from the previous command.
+
+    ```
+    python manage.py createsuperuser
+    ```
+
+    - Run Django’s superuser creation command: This will prompt you to enter
+    - a DJANGO_SUPERUSER_USERNAME,
+    - a DJANGO_SUPERUSER_EMAIL email
+    - a DJANGO_SUPERUSER_PASSWORD password for the new superuser account.
+
+    ```
+    exit
+    ```
+
+    - Close the interactive session: Logs out of the container’s shell and returns to your host machine's terminal.
     - You can access your app at http://<vm_ip>:8025/admin
+    - Login with your superuser details
+    - You can place products/ categories, get user rules and manage user rules
 
 ## Hints
 
@@ -205,31 +228,27 @@ This section will cover some hot tips when trying to interacting with this repos
 - Settings & Configuration for Django can be found in `babyshop_app/babyshop/settings.py`
 - Routing: Routing information, such as available routes can be found from any `urls.py` file in `babyshop_app` and corresponding subdirectories
 
-## Photos
+## Example Photos
 
 ##### Home Page with login
 
-<img alt="" src="https://github.com/MET-DEV/Django-E-Commerce/blob/master/project_images/capture_20220323080815407.jpg"></img>
+![Home Page with login](./project_images/all-products.jpg 'Home Page with login')
 
 ##### Home Page with filter
 
-<img alt="" src="https://github.com/MET-DEV/Django-E-Commerce/blob/master/project_images/capture_20220323080840305.jpg"></img>
+![Home Page with filter](./project_images/filter.png 'Home Page with filter')
 
 ##### Product Detail Page
 
-<img alt="" src="https://github.com/MET-DEV/Django-E-Commerce/blob/master/project_images/capture_20220323080934541.jpg"></img>
-
-##### Home Page with no login
-
-<img alt="" src="https://github.com/MET-DEV/Django-E-Commerce/blob/master/project_images/capture_20220323080953570.jpg"></img>
+![Product Detail Page](./project_images/details.png 'Product Detail Page')
 
 ##### Register Page
 
-<img alt="" src="https://github.com/MET-DEV/Django-E-Commerce/blob/master/project_images/capture_20220323081016022.jpg"></img>
+![Register Page](./project_images/register.png 'Register Page')
 
 ##### Login Page
 
-<img alt="" src="https://github.com/MET-DEV/Django-E-Commerce/blob/master/project_images/capture_20220323081044867.jpg"></img>
+![Login Page](./project_images/login.png 'Login Page')
 
 ## Contact
 
