@@ -15,13 +15,13 @@ Welcome to the **Baby Tools Shop** project! This repository contains a **Django*
 
 The **Baby Tools Shop** project is a Django-based web application that allows users to browse and purchase baby tools. The application is built with **Python** and **Django** and is designed to be easily containerized and deployed using **Docker**.
 
-## Quickstart
-
 ### Technologies
 
 - Python 3.9
 - Django 4.0.2
 - Venv
+
+## Quickstart
 
 To get started with the Baby Tools Shop, follow these steps:
 
@@ -124,8 +124,7 @@ To get started with the Baby Tools Shop, follow these steps:
     # Change to the app directory and run database migrations
 
     WORKDIR /app/babyshop_app
-    RUN python manage.py makemigrations
-    RUN python manage.py migrate
+    RUN python manage.py makemigrations && python manage.py migrate
 
     EXPOSE 8025
 
