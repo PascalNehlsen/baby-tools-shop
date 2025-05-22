@@ -2,8 +2,6 @@
 
 Welcome to the **Baby Tools Shop** project! This repository contains a **Django** application designed for managing a baby tools e-commerce store. The project uses **Docker** to containerize the application and deploy it to a virtual machine (VM).
 
-Test123
-
 ## Table of Contents
 
 1. [Project Overview](#project-overview)
