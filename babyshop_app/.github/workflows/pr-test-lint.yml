@@ -1,0 +1,36 @@
+name: PR Test Lint
+
+on:
+    push:
+        branches:
+            - "*"
+    workflow_dispatch:
+
+jobs:
+    lint:
+        runs-on: ubuntu-24.04
+
+    steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v6.0.0
+
+        - name: Setup Python
+          uses: actions/setup-python@v6.0.0
+          with:
+              python-version: "3.9"
+
+        - name: Install Dependencies
+          run: |
+              pip install black isort flake8
+
+        - name: Run black
+          run: |
+              black . --check
+
+        - name: Run Flake8
+          run: |
+              flake8 .
+
+        - name: Run isort
+          run: |
+              isort . --check-only
